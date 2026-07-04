@@ -1,0 +1,66 @@
+# Telegram Bot Framework
+python-telegram-bot==20.3
+
+# Async & HTTP
+aiohttp==3.8.5
+asyncio==3.4.3
+requests==2.31.0
+
+# Database
+sqlite3-python==1.0.0
+SQLAlchemy==2.0.21
+
+# Payments & Crypto
+stripe==5.14.0
+paypalrestsdk==1.7.1
+web3==6.10.0
+
+# Localization & i18n
+Babel==2.12.1
+python-i18n==0.3.9
+
+# Configuration & Env
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Logging
+loguru==0.7.0
+python-json-logger==2.0.7
+
+# Data Processing
+pandas==2.0.3
+numpy==1.24.3
+
+# Security
+cryptography==41.0.3
+PyJWT==2.8.0
+
+# Image Processing (for logo generation)
+Pillow==10.0.0
+
+# Task Scheduling
+APScheduler==3.10.4
+
+# API & Web
+Flask==2.3.3
+Flask-RESTful==0.3.10
+
+# Validation
+marshmallow==3.19.0
+
+# Testing
+pytest==7.4.0
+pytest-asyncio==0.21.1
+
+# Code Quality
+black==23.9.1
+flake8==6.0.0
+pylint==2.17.5
+
+# Documentation
+sphinx==7.2.6
+
+# Utilities
+click==8.1.7
+tqdm==4.66.1
+colorama==0.4.6
