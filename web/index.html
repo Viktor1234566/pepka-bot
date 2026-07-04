@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐛 Pepka Bot - 3D Battle Arena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: #000;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hud {
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        .player-hp {
+            top: 20px;
+            left: 20px;
+        }
+
+        .enemy-hp {
+            top: 20px;
+            right: 20px;
+        }
+
+        .stats {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .hp-bar {
+            width: 200px;
+            height: 20px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00aa00);
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .damage-indicator {
+            position: absolute;
+            color: #ff4444;
+            font-weight: bold;
+            font-size: 32px;
+            pointer-events: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+
+        .combo-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffff00;
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            animation: comboScale 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes comboScale {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+        }
+
+        .tap-button {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #ff6b6b, #cc0000);
+            border: 3px solid #ffff00;
+            border-radius: 50%;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255,100,100,0.8);
+            transition: all 0.1s;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .tap-button:hover {
+            box-shadow: 0 0 50px rgba(255,100,100,1);
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .tap-button:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .round-timer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffff00;
+            font-size: 72px;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+
+        .battle-log {
+            position: absolute;
+            bottom: 200px;
+            right: 20px;
+            width: 300px;
+            max-height: 150px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            padding: 10px;
+            color: #00ff00;
+            font-size: 12px;
+            overflow-y: auto;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            animation: logFade 0.3s ease-in;
+        }
+
+        @keyframes logFade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .victory-screen, .defeat-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        .victory-screen {
+            background: linear-gradient(135deg, rgba(0,255,0,0.3), rgba(255,255,0,0.3));
+            display: none;
+        }
+
+        .defeat-screen {
+            background: linear-gradient(135deg, rgba(255,0,0,0.3), rgba(0,0,0,0.5));
+            display: none;
+        }
+
+        .reward-text {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #ffff00;
+        }
+
+        .continue-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 20px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            pointer-events: auto;
+        }
+
+        .continue-button:hover {
+            background: #00cc00;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="canvas"></canvas>
+        <div id="ui">
+            <!-- Player HP -->
+            <div class="hud player-hp">
+                <div class="stats">🐛 Pepka</div>
+                <div class="hp-bar">
+                    <div class="hp-fill" id="player-hp-fill" style="width: 100%;"></div>
+                </div>
+                <div id="player-hp-text" style="font-size: 12px; margin-top: 5px;">100/100 HP</div>
+            </div>
+
+            <!-- Enemy HP -->
+            <div class="hud enemy-hp">
+                <div class="stats">🐉 Dragon</div>
+                <div class="hp-bar">
+                    <div class="hp-fill" id="enemy-hp-fill" style="width: 100%;"></div>
+                </div>
+                <div id="enemy-hp-text" style="font-size: 12px; margin-top: 5px;">100/100 HP</div>
+            </div>
+
+            <!-- Round Timer -->
+            <div class="round-timer" id="round-timer" style="display: none;">0</div>
+
+            <!-- Battle Log -->
+            <div class="battle-log" id="battle-log"></div>
+
+            <!-- Tap Button -->
+            <button class="tap-button" id="tap-btn">🖱️ TAP!</button>
+
+            <!-- Victory Screen -->
+            <div class="victory-screen" id="victory-screen">
+                <div style="color: #00ff00; font-size: 72px;">🏆 VICTORY! 🏆</div>
+                <div class="reward-text">💰 +500 Coins</div>
+                <div class="reward-text">⭐ +250 XP</div>
+                <div class="reward-text">🎖️ +1 Streak</div>
+                <button class="continue-button" onclick="location.reload()">Continue</button>
+            </div>
+
+            <!-- Defeat Screen -->
+            <div class="defeat-screen" id="defeat-screen">
+                <div style="color: #ff4444; font-size: 72px;">💀 DEFEAT! 💀</div>
+                <div class="reward-text" style="color: #ffaa00;">⭐ +10 XP</div>
+                <div class="reward-text" style="color: #ff4444;">Streak Broken!</div>
+                <button class="continue-button" onclick="location.reload()">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
