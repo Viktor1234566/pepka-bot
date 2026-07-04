@@ -1,0 +1,62 @@
+{
+  "language": "English",
+  "language_code": "en",
+  "greeting": "Welcome to Pepka Bot! 🐸",
+  "commands": {
+    "start": {
+      "title": "Welcome to Pepka!",
+      "description": "Start your adventure with Pepka!",
+      "message": "🐸 Welcome to Pepka Bot!\n\nI'm Pepka, your gaming companion! Click, battle, and earn tokens!\n\nChoose your language:"
+    },
+    "help": {
+      "title": "Help",
+      "description": "Get help about commands",
+      "message": "📖 **Pepka Bot Commands**\n\n/start - Start the game\n/profile - View your profile\n/click - Click to earn tokens\n/combat - Battle enemies\n/inventory - View items\n/leaderboard - View rankings\n/shop - Buy tokens\n/stats - View statistics"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "View your profile"
+    },
+    "click": {
+      "title": "Click",
+      "description": "Click to earn tokens",
+      "success": "✅ You earned {tokens} token(s)! Total: {total_tokens}",
+      "combo": "🔥 COMBO! You earned {bonus} bonus tokens!"
+    },
+    "combat": {
+      "title": "Combat",
+      "description": "Battle enemies",
+      "select_opponent": "Choose your opponent:"
+    },
+    "shop": {
+      "title": "Shop",
+      "description": "Buy tokens",
+      "select_package": "Choose a token package:",
+      "confirm": "Are you sure you want to buy {package}?"
+    }
+  },
+  "buttons": {
+    "click": "🖱️ Click",
+    "combat": "⚔️ Combat",
+    "profile": "👤 Profile",
+    "inventory": "🎒 Inventory",
+    "leaderboard": "🏆 Leaderboard",
+    "shop": "🛍️ Shop",
+    "settings": "⚙️ Settings",
+    "help": "❓ Help",
+    "back": "⬅️ Back",
+    "confirm": "✅ Confirm",
+    "cancel": "❌ Cancel"
+  },
+  "messages": {
+    "welcome": "Welcome to Pepka Bot! 🐸",
+    "profile_updated": "✅ Profile updated!",
+    "error": "❌ An error occurred. Please try again.",
+    "unauthorized": "❌ You are not authorized to use this command.",
+    "maintenance": "🔧 Bot is under maintenance. Please try again later."
+  },
+  "leaderboard": {
+    "title": "🏆 Top Players",
+    "header": "Rank | Player | Tokens | Level"
+  }
+}
